@@ -23,7 +23,7 @@ The project is implemented as a small FastAPI web app with a simple UI and one m
 
 Interface screenshot (add your screenshot here):
 
-**[ADD SCREENSHOT HERE]**
+![Web Interface](/web_interface.png)
 
 Optional: embed a WAV sample below the screenshot.
 
