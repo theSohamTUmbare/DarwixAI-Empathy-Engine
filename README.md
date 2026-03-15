@@ -14,28 +14,20 @@ The project is implemented as a small FastAPI web app with a simple UI and one m
     - natural segmentation (sentences + discourse connectors)
     - emotion-aware pauses (similar to SSML `<break>`)
 - Audio post-processing:
-    - trim leading/trailing silence
+    - trailing silence
     - crossfade between segments
     - export final output as WAV
 - Web UI for quick demo + playback
 
 ## Demo
 
-Interface screenshot (add your screenshot here):
+Interface screenshot:
 
 ![Web Interface](/web_interface.png)
 
-Optional: embed a WAV sample below the screenshot.
+[Direct link to the latest generated audio!](https://github.com/theSohamTUmbare/DarwixAI-Empathy-Engine/blob/main/static/audio/output.wav)
 
-> Note: Some Markdown renderers don’t play audio inline (GitHub often shows a link). If it doesn’t render as a player, the link still works.
 
-```html
-<audio controls src="static/audio/output.wav"></audio>
-```
-
-Direct link to the latest generated audio:
-
-- `static/audio/output.wav`
 
 ## How it works (High-level pipeline)
 
