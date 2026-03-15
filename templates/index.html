@@ -1,47 +1,294 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Empathy Engine</title>
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Empathy Engine</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --bg: #f5f2ee;
+      --surface: #ffffff;
+      --border: #e2dcd5;
+      --text-primary: #1a1714;
+      --text-secondary: #7a7168;
+      --accent: #c8633a;
+      --accent-soft: #f7ede6;
+      --accent-hover: #b3552f;
+      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 48px 16px 64px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 40px 44px;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .header {
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 20px;
+      padding: 4px 12px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+
+    /* Suggestions */
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .suggestion-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      font-family: 'DM Sans', sans-serif;
+      white-space: normal;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    .suggestion-chip:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Textarea */
+    .textarea-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--surface);
+      resize: vertical;
+      min-height: 130px;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+
+    textarea::placeholder { color: #b8b0a8; }
+
+    textarea:focus { border-color: var(--accent); }
+
+    .char-count {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      pointer-events: none;
+    }
+
+    /* Button */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 13px 26px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.1s;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn:hover { background: var(--accent-hover); }
+    .btn:active { transform: scale(0.98); }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn svg { flex-shrink: 0; }
+
+    /* Spinner */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .btn.loading .spinner { display: block; }
+    .btn.loading .btn-label { opacity: 0.8; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Player */
+    .player-section {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: none;
+    }
+
+    .player-section.visible { display: block; }
+
+    .player-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    audio {
+      width: 100%;
+      border-radius: 8px;
+      accent-color: var(--accent);
+    }
+  </style>
+</head>
 <body>
 
-<h2>Empathy Engine Demo</h2>
+<div class="card">
+  <div class="header">
+    <div class="badge">Live Demo</div>
+    <h1>Empathy Engine</h1>
+    <p class="subtitle">Type any text and generate a natural, expressive voice.</p>
+  </div>
 
-<textarea id="text" rows="6" cols="70"></textarea>
+  <p class="section-label">Try a sample</p>
+  <div class="suggestions">
+    <button class="suggestion-chip" onclick="useSuggestion(this)">Hello, thank you for reaching out. I'd be happy to help you with that. Let me check the details of your account so we can understand what might have happened.</button>
+    <button class="suggestion-chip" onclick="useSuggestion(this)">I'm really sorry for the inconvenience this issue has caused you. That's definitely not the experience we want our users to have, and I appreciate your patience while we work on resolving it.</button>
+    <button class="suggestion-chip" onclick="useSuggestion(this)">Just to make sure I understand correctly, are you seeing this error message every time you try to log in, or does it only appear occasionally?</button>
+    <button class="suggestion-chip" onclick="useSuggestion(this)">I completely understand why that charge might have looked concerning at first. I've reviewed the transaction, and I can confirm that it's related to your subscription renewal.</button>
+    <button class="suggestion-chip" onclick="useSuggestion(this)">I'm glad we were able to resolve the issue today. If you have any other questions or need further assistance in the future, please feel free to reach out anytime.</button>
+  </div>
 
-<br><br>
+  <div class="textarea-wrapper">
+    <textarea id="text" rows="5" placeholder="Enter your text here…" oninput="updateCount()"></textarea>
+    <span class="char-count" id="charCount">0</span>
+  </div>
 
-<button onclick="speak()">Generate Voice</button>
+  <button class="btn" id="speakBtn" onclick="speak()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+    <span class="btn-label">Generate Voice</span>
+    <div class="spinner"></div>
+  </button>
 
-<br><br>
-
-<audio id="player" controls></audio>
+  <div class="player-section" id="playerSection">
+    <p class="player-label">Generated Audio</p>
+    <audio id="player" controls></audio>
+  </div>
+</div>
 
 <script>
+  function updateCount() {
+    const t = document.getElementById("text");
+    document.getElementById("charCount").textContent = t.value.length;
+  }
 
-async function speak(){
+  function useSuggestion(el) {
+    document.getElementById("text").value = el.textContent;
+    updateCount();
+    document.getElementById("text").focus();
+  }
 
-    const text = document.getElementById("text").value
+  async function speak() {
+    const text = document.getElementById("text").value.trim();
+    if (!text) return;
 
-    const form = new FormData()
+    const btn = document.getElementById("speakBtn");
+    btn.disabled = true;
+    btn.classList.add("loading");
+    btn.querySelector(".btn-label").textContent = "Generating…";
 
-    form.append("text", text)
+    const form = new FormData();
+    form.append("text", text);
 
-    const res = await fetch("/speak", {
-        method:"POST",
-        body:form
-    })
+    const res = await fetch("/speak", { method: "POST", body: form });
+    const data = await res.json();
 
-    const data = await res.json()
+    document.getElementById("player").src = data.audio + "?t=" + new Date().getTime();
+    document.getElementById("playerSection").classList.add("visible");
 
-    document.getElementById("player").src =
-        data.audio + "?t=" + new Date().getTime()
-}
-
+    btn.disabled = false;
+    btn.classList.remove("loading");
+    btn.querySelector(".btn-label").textContent = "Generate Voice";
+  }
 </script>
 
 </body>
-
 </html>
-    
