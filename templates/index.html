@@ -1,0 +1,47 @@
+<html>
+
+<head>
+<title>Empathy Engine</title>
+</head>
+
+<body>
+
+<h2>Empathy Engine Demo</h2>
+
+<textarea id="text" rows="6" cols="70"></textarea>
+
+<br><br>
+
+<button onclick="speak()">Generate Voice</button>
+
+<br><br>
+
+<audio id="player" controls></audio>
+
+<script>
+
+async function speak(){
+
+    const text = document.getElementById("text").value
+
+    const form = new FormData()
+
+    form.append("text", text)
+
+    const res = await fetch("/speak", {
+        method:"POST",
+        body:form
+    })
+
+    const data = await res.json()
+
+    document.getElementById("player").src =
+        data.audio + "?t=" + new Date().getTime()
+}
+
+</script>
+
+</body>
+
+</html>
+    
